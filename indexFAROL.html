@@ -1,668 +1,544 @@
 <!DOCTYPE html>
-<html lang="pt-br">
-
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Farol dos Alimentos - Ativador Metabólico N1</title>
+<html lang="pt-br" class="dark">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+    <title>N1 - Método Ativador Metabólico</title>
+    
+    <!-- Dependências Externas -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      .hide-scroll::-webkit-scrollbar {
-        display: none;
-      }
-
-      #rulesContent {
-        max-height: 0;
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-      }
-
-      #rulesChevron {
-        transition: transform 0.3s ease;
-      }
-
-      .food-card-transition {
-        transition: all 0.2s ease;
-      }
-
-      .food-card-transition:active {
-        transform: scale(0.97);
-      }
-
-      .filter-btn:active {
-        transform: scale(0.95);
-      }
-    </style>
-  </head>
-
-  <body class="bg-slate-50 text-slate-900 pb-12">
-
-    <!-- HEADER COMPONENT -->
-    <header class="w-full bg-white shadow-sm border-b border-slate-100 py-6 px-4 mb-6 flex flex-col items-center">
-      <img src="https://i.ibb.co/60C7N827/logo.png" alt="Logo Ativador Metabólico" class="h-16 w-auto mb-4 object-contain" onerror="this.style.display='none'">
-      <h1 class="text-xl font-bold text-slate-800 tracking-tight text-center">Ativador Metabólico N1</h1>
-      <p class="text-sm text-slate-500">Guia de Bolso: Farol dos Alimentos</p>
-    </header>
-
-    <main class="max-w-md mx-auto px-4 space-y-6">
-
-      <!-- SEARCH SECTION -->
-      <section class="bg-white rounded-2xl shadow-md p-5 border border-slate-100">
-        <div class="relative group">
-          <i data-lucide="search" class="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
-          <input type="text" id="searchInput" placeholder="Ex: Fruta, Peixe, Arroz..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
-        </div>
-        <div id="resultsArea" class="mt-4 space-y-3 text-center"></div>
-      </section>
-
-      <!-- EXPLORE BY LISTS (INTERACTIVE LEGEND) -->
-      <section class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
-        <div class="flex items-center justify-between">
-          <h3 class="font-bold text-sm uppercase tracking-widest text-slate-500 flex items-center gap-2">
-            <i data-lucide="layers" class="h-4 w-4"></i> Explorar Listas:
-          </h3>
-          <button onclick="App.clearSearch()" class="text-[10px] font-bold text-slate-400 hover:text-indigo-600 uppercase flex items-center gap-1 transition-colors">
-            <i data-lucide="refresh-cw" class="h-3 w-3"></i>
-            Limpar Tudo
-          </button>
-        </div>
-        <div id="legendList" class="space-y-2"></div>
-      </section>
-
-      <!-- USER DATA SECTION (SHOPPING LIST & HISTORY) -->
-      <div id="savedDataArea" class="space-y-6">
-        <section id="favoritesSection" class="hidden">
-          <div class="flex items-center justify-between mb-3 px-1">
-            <div class="flex items-center gap-2 text-slate-500 font-bold text-sm uppercase tracking-widest">
-              <i data-lucide="shopping-cart" class="h-4 w-4"></i>
-              Lista de Compras
-            </div>
-            <button onclick="App.clearFavorites()" class="text-[10px] font-bold text-red-500 hover:text-red-700 uppercase flex items-center gap-1 transition-colors">
-              <i data-lucide="trash-2" class="h-3 w-3"></i>
-              Limpar Lista
-            </button>
-          </div>
-          <div id="favoritesList" class="grid grid-cols-2 gap-3"></div>
-        </section>
-
-        <section id="historySection" class="hidden">
-          <div class="flex items-center gap-2 mb-3 px-1 text-slate-500 font-bold text-sm uppercase tracking-widest">
-            <i data-lucide="history" class="h-4 w-4"></i>
-            Últimas Consultas
-          </div>
-          <div id="historyList" class="bg-white rounded-2xl border border-slate-200 overflow-hidden"></div>
-        </section>
-      </div>
-
-      <!-- LEARNING AREA -->
-      <section class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
-        <h3 class="font-bold text-sm uppercase tracking-widest text-slate-500 flex items-center gap-2">
-          <i data-lucide="play-circle" class="h-4 w-4"></i> Área de Aprendizado:
-        </h3>
-        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-inner bg-slate-100">
-          <iframe class="w-full h-full" src="https://www.youtube.com/embed/tbvjWN2kbMA?si=UEM8bq3DRXL3m1U8&rel=0&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
-          </iframe>
-        </div>
-        <p class="text-xs text-slate-500 leading-relaxed">
-          Assista ao vídeo acima para entender em detalhes como o método <strong>Ativador Metabólico</strong> funciona.
-        </p>
-      </section>
-
-      <!-- GOLDEN RULES (FOOTER) -->
-      <section class="bg-indigo-600 rounded-2xl shadow-lg text-white overflow-hidden">
-        <button onclick="UI.toggleRules()" class="w-full flex justify-between items-center p-5 font-bold text-lg hover:bg-indigo-700 transition-colors focus:outline-none">
-          <div class="flex items-center gap-2">
-            <i data-lucide="star" class="h-6 w-6 text-yellow-400 fill-yellow-400"></i>
-            Regras de Ouro (N1)
-          </div>
-          <i data-lucide="chevron-down" id="rulesChevron"></i>
-        </button>
-        <div id="rulesContent" class="bg-indigo-500/10">
-          <div class="p-4 space-y-4" id="rulesList"></div>
-        </div>
-      </section>
-
-      <footer class="text-center py-4">
-        <p class="text-slate-400 text-xs leading-relaxed px-8 italic">
-          "O papo aqui não é emagrecimento, o papo aqui é saúde. O emagrecimento é consequência."
-        </p>
-      </footer>
-    </main>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+    
+    <!-- React & Router -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/history@5/umd/history.development.js"></script>
+    <script src="https://unpkg.com/react-router@6.3.0/umd/react-router.development.js"></script>
+    <script src="https://unpkg.com/react-router-dom@6.3.0/umd/react-router-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
-      /**
-       * CONFIGURATION & DATA
-       */
-      const CATEGORY_CONFIG = {
-        verde: {
-          bg: 'bg-emerald-100 text-emerald-800 border-emerald-200',
-          dot: 'bg-emerald-500',
-          text: 'text-emerald-700',
-          icon: 'check-circle',
-          label: 'Lista Verde',
-          desc: 'Coma à vontade.'
-        },
-        amarela: {
-          bg: 'bg-yellow-100 text-yellow-800 border-yellow-200',
-          dot: 'bg-yellow-500',
-          text: 'text-yellow-700',
-          icon: 'info',
-          label: 'Lista Amarela',
-          desc: 'Moderação (Máx 2/dia).'
-        },
-        laranja: {
-          bg: 'bg-orange-100 text-orange-800 border-orange-200',
-          dot: 'bg-orange-500',
-          text: 'text-orange-700',
-          icon: 'alert-triangle',
-          label: 'Lista Laranja',
-          desc: 'Em crise (1x a cada 2 dias).'
-        },
-        vermelha: {
-          bg: 'bg-red-100 text-red-800 border-red-200',
-          dot: 'bg-red-500',
-          text: 'text-red-700',
-          icon: 'x-circle',
-          label: 'Lista Vermelha',
-          desc: 'Pare! Atrapalha a queima.'
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        n1: {
+                            DEFAULT: '#13ec5b',
+                            dim: '#0b8a36',
+                            glow: '#80ffaa'
+                        },
+                        dark: {
+                            bg: '#0B0E14',
+                            card: '#151A23',
+                            surface: '#1E2532'
+                        }
+                    }
+                },
+            },
+        };
+    </script>
+
+    <style>
+        body {
+            background-color: #0B0E14;
+            color: #ffffff;
+            -webkit-tap-highlight-color: transparent;
+            overflow-x: hidden;
+            width: 100%;
         }
-      };
-
-      const FOOD_DATABASE = [
-        // LISTA VERDE
-        { name: 'Abacaxi', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Cereja', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Goiaba', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Kiwi', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Laranja', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Limão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Maçã', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Mamão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Maracujá', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Melancia', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Melão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Mexerica', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Morango', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Pera', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Pêssego', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Mirtilo', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Jabuticaba', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Acerola', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Figo', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-        { name: 'Romã', category: 'verde', note: 'Liberado', tags: ['fruta'] },
-
-        { name: 'Ovo caipira ou orgânico', category: 'verde', note: 'Excelente fonte', tags: ['proteina', 'ovo'] },
-        { name: 'Ovo de Codorna', category: 'verde', note: 'Liberado', tags: ['proteina', 'ovo'] },
-
-        { name: 'Filé de Peixe', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Filé de Frango', category: 'verde', note: 'Liberado', tags: ['proteina', 'frango'] },
-        { name: 'Sardinha', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Tilapia', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Pescada', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Cação', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Tainha', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Linguado', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Salmão', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Badejo', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Abadejo', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-        { name: 'Merluza', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
-
-        { name: 'Aveia em Flocos', category: 'verde', note: 'Liberado', tags: ['carboidrato', 'grao'] },
-
-        { name: 'Folhas TODAS', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha', 'salada'] },
-        { name: 'Alface crespa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Alface americana', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Alface roxa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Alface mimosa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Alface romana', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Rúcula', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Agrião', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Espinafre', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Escarola', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Chicória', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Almeirão', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Ora-pro-nóbis', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Couve manteiga', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Couve roxa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-        { name: 'Couve-flor', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Repolho verde', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Repolho roxo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Acelga', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-
-        { name: 'Abóbora Japonesa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'carboidrato'] },
-        { name: 'Abobrinha', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Beringela', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Brócolis', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Cenoura', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Chuchu', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Jiló', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Lentilha', category: 'verde', note: 'Liberado', tags: ['leguminosa'] },
-        { name: 'Mandioquinha', category: 'verde', note: 'Liberado', tags: ['carboidrato'] },
-        { name: 'Pepino', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Pimentão', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Quiabo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Quinoa', category: 'verde', note: 'Liberado', tags: ['grao'] },
-        { name: 'Rabanete', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Cebola', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Tomate', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-
-        { name: 'Alho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Gengibre', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Cúrcuma', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Açafrão', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Cominho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Canela', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-
-        { name: 'Cacau 100%', category: 'verde', note: 'Liberado', tags: ['bebida'] },
-        { name: 'Água', category: 'verde', note: 'Indispensável', tags: ['bebida'] },
-        { name: 'Água com gas', category: 'verde', note: 'Liberado', tags: ['bebida'] },
-        { name: 'Café (até as 12hs)', category: 'verde', note: 'Atenção ao horário', tags: ['bebida', 'cafe'] },
-        { name: 'Chá', category: 'verde', note: 'Liberado', tags: ['bebida', 'cha'] },
-
-        { name: 'Temperos Secos', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Temperos naturais', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-
-        { name: 'Pimenta', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Páprica', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Pimenta do reino', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Semente de mostarda', category: 'verde', note: 'Liberado', tags: ['tempero', 'semente'] },
-        { name: 'Lemon pepper', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-
-        { name: 'Orégano', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Manjericão', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Hortelã', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Salsinha', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Cebolinha', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Coentro', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-
-        { name: 'Sementes (Linhaça, Chia...)', category: 'verde', note: 'Liberado', tags: ['grao', 'semente'] },
-        { name: 'Vagem', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Aipo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Salsão', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
-        { name: 'Catalonha', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
-
-        { name: 'Semente de abóbora', category: 'verde', note: 'Liberado', tags: ['semente'] },
-        { name: 'Semente de girassol', category: 'verde', note: 'Liberado', tags: ['semente'] },
-        { name: 'Alpiste', category: 'verde', note: 'Liberado', tags: ['semente'] },
-        { name: 'Gergelim', category: 'verde', note: 'Liberado', tags: ['semente'] },
-        { name: 'Psyllium', category: 'verde', note: 'Liberado', tags: ['semente', 'fibra'] },
-
-        { name: 'Colorau', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Alecrin', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Curry', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Cravo da India', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Manjerona', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Louro', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Mix de Pimentas', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Mostarda em pó', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Noz Moscada', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Pimenta Caiena', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Pimenta Calabresa', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Tomilho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Sal Rosa', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-        { name: 'Sálvia', category: 'verde', note: 'Liberado', tags: ['tempero'] },
-
-        // LISTA AMARELA
-        { name: 'Banana', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Manga', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Tamara', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Atemoia', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Abacate', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta', 'gordura'] },
-        { name: 'Coco', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta', 'gordura'] },
-        { name: 'Batata Doce', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato'] },
-        { name: 'Grão de Bico', category: 'amarela', note: 'Máximo 2 no dia', tags: ['leguminosa'] },
-        { name: 'Feijão Azuki', category: 'amarela', note: 'Máximo 2 no dia', tags: ['leguminosa'] },
-        { name: 'Arroz Negro', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato', 'grao'] },
-        { name: 'Inhame', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato'] },
-        { name: 'Nozes', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
-
-        // ADICIONADOS (AMARELA)
-        { name: 'Amêndoa Crua', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
-        { name: 'Castanhas Cruas', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
-        { name: 'Amendoim Cru', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
-        { name: 'Camarão', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-        { name: 'Fígado de Boi', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'carne'] },
-        { name: 'Patinho de Boi', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'carne'] },
-        { name: 'Frutos do Mar', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-
-        { name: 'Amora', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Carambola', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Graviola', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Lula', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-        { name: 'Polvo', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-        { name: 'Mexilhão', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-        { name: 'Ostra', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
-        { name: 'Caqui', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-        { name: 'Uva', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
-
-        // LISTA LARANJA
-        { name: 'Pipoca na Água / Pipoqueira', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['snack'] },
-        { name: 'Chocolate 85%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
-        { name: 'Mel', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
-        { name: 'Vinagre de Maçã Orgânico', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['tempero'] },
-        { name: 'Músculo', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
-        { name: 'Alcatra', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
-        { name: 'Baby Beef', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
-        { name: 'Acém', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
-
-        // ADICIONADOS (LARANJA)
-        { name: 'Pasta de Amendoim 100%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['oleaginosa', 'gordura'] },
-        { name: 'Leite Vegetal (Castanha)', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['bebida'] },
-        { name: 'Leite de Coco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['bebida', 'gordura'] },
-        { name: 'Nibs de Cacau', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
-        { name: 'Granola Zero', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['carboidrato'] },
-        { name: 'Óleo de Coco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['gordura'] },
-        { name: 'Adoçante 100% Stevia', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
-        { name: 'Extrato de Baunilha', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['tempero'] },
-        { name: 'Requeijão Light', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['laticinio'] },
-        { name: 'Ricota', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['laticinio'] },
-        { name: 'Açaí Puro 100%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['fruta'] },
-        { name: 'Lombo de Porco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne', 'porco'] },
-        { name: 'Filé Mignon', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
-        { name: 'Azeite Extra Virgem', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['gordura'] },
-
-        // LISTA VERMELHA
-        { name: 'Arroz Branco', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'grao'] },
-        { name: 'Açúcar', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Coca Zero', category: 'vermelha', note: 'Não consumir', tags: ['bebida', 'refrigerante'] },
-        { name: 'Queijos (Amarelos/Gordos)', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
-        { name: 'Iogurte', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
-        { name: 'Enlatados', category: 'vermelha', note: 'Não consumir', tags: ['processado'] },
-        { name: 'Ervilha', category: 'vermelha', note: 'Não consumir', tags: ['leguminosa'] },
-        { name: 'Farinhas (Trigo, Milho...)', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'farinha'] },
-        { name: 'Pão / Pão Integral', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'farinha'] },
-        { name: 'Torrada', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Macarrão / Lasanha', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'massa'] },
-        { name: 'Peito de Peru', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
-        { name: 'Presunto', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
-        { name: 'Mussarela', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
-        { name: 'Xilitol / Adoçantes Artificiais', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Achocolatado', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'bebida'] },
-        { name: 'Whey Protein', category: 'vermelha', note: 'Não consumir', tags: ['suplemento'] },
-        { name: 'Barra de Cereal', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'carboidrato'] },
-        { name: 'Manteiga / Margarina', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
-        { name: 'Bolacha / Biscoito', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'carboidrato'] },
-        { name: 'Óleos (Soja, Girassol...)', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
-        { name: 'Atum', category: 'vermelha', note: 'Não consumir', tags: ['peixe'] },
-        { name: 'Tapioca', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Danone', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
-        { name: 'Salame', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
-        { name: 'Milho', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Água Tonica', category: 'vermelha', note: 'Não consumir', tags: ['bebida'] },
-        { name: 'H2O', category: 'vermelha', note: 'Não consumir', tags: ['bebida'] },
-        { name: 'Gelatina', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Paçoca Zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Trident zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'chiclete zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Biscoito de Polvilho', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Pão de Queijo', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Pão Francês', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Frutas desidratadas', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'fruta'] },
-        { name: 'Atum light', category: 'vermelha', note: 'Não consumir', tags: ['peixe'] },
-        { name: 'Bolo', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Gelatina zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
-        { name: 'Salsicha', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
-        { name: 'Linguiça', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
-        { name: 'Torresmo', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
-
-        // ADICIONADOS (VERMELHA)
-        { name: 'Feijão Comum', category: 'vermelha', note: 'Não consumir', tags: ['leguminosa'] },
-        { name: 'Batata Inglesa', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Mandioca', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
-        { name: 'Leite de Vaca', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] }
-      ];
-
-      const GOLDEN_RULES = [
-        { title: 'Sono Restaurador', desc: 'Dormir antes das 23h para o pico de melatonina.', icon: 'moon' },
-        { title: 'Hidratação (35ml/kg)', desc: 'Água é o combustível da queima. Xixi claro!', icon: 'droplets' },
-        { title: 'Água com Limão', desc: 'Ao acordar para preparar o organismo.', icon: 'zap' },
-        { title: 'Regra 50/25/25', desc: '50% Folhas, 25% Legumes, 25% Proteína.', icon: 'utensils' },
-        { title: 'Não Beliscar', desc: 'Faça refeições completas. Máximo 4 no dia.', icon: 'ban' },
-        { title: 'Treino = Banho', desc: 'Nunca falte. Se perdeu o dia, perdeu muito.', icon: 'dumbbell' }
-      ];
-
-      /**
-       * UTILS MODULE
-       */
-      const Utils = {
-        normalize: (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(),
-        storage: {
-          get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
-          set: (key, val) => localStorage.setItem(key, JSON.stringify(val))
+        
+        /* Layout fixo para Mobile */
+        #root {
+            max-width: 500px;
+            margin: 0 auto;
+            min-height: 100vh;
+            position: relative;
         }
-      };
 
-      /**
-       * UI RENDER MODULE
-       */
-      const UI = {
-        resultsArea: document.getElementById('resultsArea'),
-        favoritesList: document.getElementById('favoritesList'),
-        historyList: document.getElementById('historyList'),
-        rulesList: document.getElementById('rulesList'),
-        legendList: document.getElementById('legendList'),
+        .glass {
+            background: rgba(21, 26, 35, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
-        createFoodCard: (food, isFav, showFullNote = true) => {
-          const cfg = CATEGORY_CONFIG[food.category];
-          return `
-                    <div onclick="App.addToHistory('${food.name}')" class="text-left flex flex-col p-4 rounded-xl border ${cfg.bg} food-card-transition cursor-pointer shadow-sm">
-                        <div class="flex justify-between items-start">
-                            <div class="flex items-center gap-2">
-                                <i data-lucide="${cfg.icon}" class="h-5 w-5"></i>
-                                <span class="font-bold text-lg leading-tight">${food.name}</span>
+        .material-symbols-rounded {
+            font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Efeito de preenchimento de água */
+        .water-fill {
+            background: linear-gradient(180deg, #3b82f6 0%, #1d4ed8 100%);
+            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .progress-ring__circle {
+            transition: stroke-dashoffset 0.5s ease, stroke 0.5s ease;
+            transform: rotate(-90deg);
+            transform-origin: 50% 50%;
+        }
+
+        .animate-spin-slow {
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, createContext, useContext } = React;
+        const { HashRouter, Routes, Route, Link, useNavigate, useLocation } = ReactRouterDOM;
+
+        // --- Contexto Global ---
+        const AppContext = createContext();
+
+        const useStickyState = (defaultValue, key) => {
+            const [value, setValue] = useState(() => {
+                const stickyValue = window.localStorage.getItem(key);
+                return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+            });
+            useEffect(() => {
+                window.localStorage.setItem(key, JSON.stringify(value));
+            }, [key, value]);
+            return [value, setValue];
+        };
+
+        const getCurrentDate = () => new Date().toISOString().split('T')[0];
+
+        // --- Níveis de Metabolismo ---
+        const METABOLISM_LEVELS = [
+            { threshold: 0, label: 'Lesma manca', emoji: '🐌', color: '#ef4444' },
+            { threshold: 11, label: 'Tartaruga hibernando', emoji: '🐢', color: '#f97316' },
+            { threshold: 21, label: 'Coelho acordando', emoji: '🐰', color: '#fbbf24' },
+            { threshold: 31, label: 'Capivara animada', emoji: '🐹', color: '#facc15' },
+            { threshold: 41, label: 'Lobo faminto', emoji: '🐺', color: '#a3e635' },
+            { threshold: 61, label: 'Leão em caça', emoji: '🦁', color: '#4ade80' },
+            { threshold: 81, label: 'Falcão Focado', emoji: '🦅', color: '#22c55e' },
+            { threshold: 91, label: 'Guepardo Insano', emoji: '🐆', color: '#13ec5b' },
+            { threshold: 100, label: 'Fenix Flamejante', emoji: '🔥', color: '#ffffff' }
+        ];
+
+        const getMetabolismLevel = (score) => {
+            return [...METABOLISM_LEVELS].reverse().find(level => score >= level.threshold) || METABOLISM_LEVELS[0];
+        };
+
+        // --- Componentes ---
+
+        const Header = ({ title, showBack = false }) => {
+            const navigate = useNavigate();
+            return (
+                <header className="fixed top-0 left-0 right-0 z-40 bg-dark-bg/90 backdrop-blur-lg border-b border-white/5 h-16 flex items-center px-4 max-w-[500px] mx-auto">
+                    {showBack ? (
+                        <button onClick={() => navigate(-1)} className="p-2 text-gray-400">
+                            <span className="material-symbols-rounded">arrow_back_ios_new</span>
+                        </button>
+                    ) : (
+                        <div className="flex items-center gap-2">
+                            <img src="https://i.ibb.co/60C7N827/logo.png" alt="N1 Logo" className="h-8 w-auto" />
+                        </div>
+                    )}
+                    <h1 className="text-lg font-bold tracking-tight text-white flex-1 ml-2 truncate">{title}</h1>
+                    <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-n1 animate-pulse"></div>
+                        <span className="text-[10px] font-black text-n1 tracking-widest uppercase">Ativo</span>
+                    </div>
+                </header>
+            );
+        };
+
+        const NavBar = () => {
+            const navigate = useNavigate();
+            const location = useLocation();
+            
+            // Nova ordem conforme solicitado: Hoje, Hidratação, Método, Lista (Link)
+            const navItems = [
+                { path: '/', icon: 'dashboard', label: 'Hoje' },
+                { path: '/hydration', icon: 'water_drop', label: 'Água' },
+                { path: '/method', icon: 'school', label: 'Método' },
+                { 
+                    path: 'https://sites.google.com/view/guiaativadorn1/app', 
+                    icon: 'nutrition', 
+                    label: 'Lista', 
+                    isExternal: true 
+                },
+            ];
+
+            return (
+                <div className="fixed bottom-0 left-0 right-0 p-4 z-50 max-w-[500px] mx-auto">
+                    <div className="glass rounded-[2.5rem] h-16 flex items-center justify-around px-2 shadow-2xl">
+                        {navItems.map((item) => {
+                            const isActive = location.pathname === item.path;
+                            return (
+                                <button 
+                                    key={item.label}
+                                    onClick={() => {
+                                        if (item.isExternal) {
+                                            window.location.href = item.path;
+                                        } else {
+                                            navigate(item.path);
+                                        }
+                                    }}
+                                    className={`flex flex-col items-center justify-center w-12 h-12 rounded-full transition-all duration-300 ${isActive ? 'bg-n1 text-black shadow-lg shadow-n1/40 scale-110' : 'text-gray-500'}`}
+                                >
+                                    <span className="material-symbols-rounded text-2xl">{item.icon}</span>
+                                </button>
+                            )
+                        })}
+                    </div>
+                </div>
+            );
+        };
+
+        const CircularProgress = ({ score, color }) => {
+            const size = 160;
+            const strokeWidth = 12;
+            const radius = (size - strokeWidth) / 2;
+            const circumference = radius * 2 * Math.PI;
+            const offset = circumference - (score / 100) * circumference;
+
+            return (
+                <div className="relative flex items-center justify-center">
+                    <svg width={size} height={size}>
+                        <circle
+                            className="text-dark-surface"
+                            strokeWidth={strokeWidth}
+                            stroke="currentColor"
+                            fill="transparent"
+                            r={radius}
+                            cx={size / 2}
+                            cy={size / 2}
+                        />
+                        <circle
+                            className="progress-ring__circle"
+                            strokeWidth={strokeWidth}
+                            strokeDasharray={circumference}
+                            strokeDashoffset={offset}
+                            strokeLinecap="round"
+                            stroke={color}
+                            fill="transparent"
+                            r={radius}
+                            cx={size / 2}
+                            cy={size / 2}
+                        />
+                    </svg>
+                    <div className="absolute flex flex-col items-center">
+                        <span className="material-symbols-rounded text-4xl mb-1 transition-all duration-500" style={{ color: color }}>
+                            local_fire_department
+                        </span>
+                        <span className="text-3xl font-black text-white">{score}%</span>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Telas ---
+
+        const Dashboard = () => {
+            const { weight } = useContext(AppContext);
+            const today = getCurrentDate();
+            const [tasks, setTasks] = useStickyState({
+                lemonWater: false, 
+                training: false, 
+                sleep: false, 
+                plateRule: false, 
+                healthyFood: false,
+                noSnack: false, 
+                earlyDinner: false
+            }, `n1_tasks_v2_${today}`);
+            
+            const [waterIntake, setWaterIntake] = useStickyState(0, `n1_water_${today}`);
+            const waterGoal = weight * 0.035;
+
+            const calculateScore = () => {
+                let s = 0;
+                // Cards principais
+                if (tasks.training) s += 20;
+                if (tasks.sleep) s += 15;
+                // Água dinâmica (15 pontos)
+                const waterPercent = Math.min((waterIntake / waterGoal), 1);
+                s += Math.round(waterPercent * 15);
+                // Checklist (10 pontos cada)
+                if (tasks.lemonWater) s += 10;
+                if (tasks.plateRule) s += 10;
+                if (tasks.healthyFood) s += 10;
+                if (tasks.noSnack) s += 10;
+                if (tasks.earlyDinner) s += 10;
+
+                return Math.min(s, 100);
+            };
+
+            const score = calculateScore();
+            const currentLevel = getMetabolismLevel(score);
+
+            useEffect(() => {
+                if (score === 100) {
+                    confetti({
+                        particleCount: 150,
+                        spread: 70,
+                        origin: { y: 0.6 },
+                        colors: ['#13ec5b', '#ffffff', '#fbbf24']
+                    });
+                }
+            }, [score]);
+
+            return (
+                <div className="pt-20 pb-28 px-4 animate-slide-up">
+                    <Header title="Desperta Metabolismo" />
+                    
+                    {/* Hero de Progresso */}
+                    <div className="flex flex-col items-center mb-8">
+                        <div className="relative mb-4">
+                            <div className="absolute inset-0 blur-3xl rounded-full opacity-20" style={{ backgroundColor: currentLevel.color }}></div>
+                            <CircularProgress score={score} color={currentLevel.color} />
+                        </div>
+                        
+                        <div className="glass px-6 py-3 rounded-full flex items-center gap-3 border-n1/10">
+                            <span className="text-2xl">{currentLevel.emoji}</span>
+                            <div className="text-left">
+                                <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest leading-none mb-1">Nível de Metabolismo</p>
+                                <h2 className="text-sm font-black text-white leading-none" style={{ color: currentLevel.color }}>{currentLevel.label}</h2>
                             </div>
-                            <button onclick="event.stopPropagation(); App.toggleFavorite('${food.name}')">
-                                <i data-lucide="star" class="h-5 w-5 ${isFav ? 'fill-current text-yellow-500' : 'text-slate-300'}"></i>
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 mb-6">
+                        {/* Card Treino */}
+                        <button 
+                            onClick={() => setTasks({...tasks, training: !tasks.training})}
+                            className={`col-span-2 p-5 rounded-3xl transition-all active:scale-95 ${tasks.training ? 'bg-n1 text-black shadow-lg shadow-n1/20' : 'bg-dark-card border border-white/5'}`}
+                        >
+                            <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-3">
+                                    <span className="material-symbols-rounded text-2xl">fitness_center</span>
+                                    <div className="text-left">
+                                        <h3 className="font-bold">Treino = Banho</h3>
+                                        <p className="text-[10px] opacity-70">Obrigatório Nível 1</p>
+                                    </div>
+                                </div>
+                                {tasks.training && <span className="material-symbols-rounded font-black">check_circle</span>}
+                            </div>
+                        </button>
+
+                        {/* Card Água */}
+                        <div className="glass p-4 rounded-3xl flex flex-col justify-between h-32 relative overflow-hidden">
+                            <div className="absolute bottom-0 left-0 right-0 bg-blue-500/10 transition-all duration-700" style={{ height: `${(waterIntake/waterGoal)*100}%` }}></div>
+                            <span className="material-symbols-rounded text-blue-400 relative z-10">water_drop</span>
+                            <div className="relative z-10">
+                                <h3 className="text-xs font-bold text-gray-400 uppercase">Hidratação</h3>
+                                <p className="text-lg font-bold">{waterIntake.toFixed(1)}L</p>
+                            </div>
+                        </div>
+
+                        {/* Card Sono */}
+                        <button 
+                            onClick={() => setTasks({...tasks, sleep: !tasks.sleep})}
+                            className={`p-4 rounded-3xl flex flex-col justify-between h-32 transition-all active:scale-95 ${tasks.sleep ? 'bg-indigo-600/20 border border-indigo-500/50' : 'bg-dark-card border border-white/5'}`}
+                        >
+                            <span className={`material-symbols-rounded ${tasks.sleep ? 'text-indigo-400' : 'text-gray-600'}`}>nights_stay</span>
+                            <div className="text-left">
+                                <h3 className="text-xs font-bold uppercase text-gray-400">Sono</h3>
+                                <p className="text-xs font-bold">Antes 23h</p>
+                            </div>
+                        </button>
+                    </div>
+
+                    {/* Checklist Alimentação & Hábitos */}
+                    <div className="space-y-2">
+                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em] mb-3 ml-2">Alimentação & Hábitos</p>
+                        
+                        <CompactCheck 
+                            label="Água com Limão ao acordar" 
+                            checked={tasks.lemonWater} 
+                            onToggle={() => setTasks({...tasks, lemonWater: !tasks.lemonWater})} 
+                            icon="eco" 
+                        />
+                        <CompactCheck 
+                            label="Prato 50/25/25" 
+                            checked={tasks.plateRule} 
+                            onToggle={() => setTasks({...tasks, plateRule: !tasks.plateRule})} 
+                            icon="restaurant" 
+                        />
+                        <CompactCheck 
+                            label="Alimentação Saudável" 
+                            checked={tasks.healthyFood} 
+                            onToggle={() => setTasks({...tasks, healthyFood: !tasks.healthyFood})} 
+                            icon="health_and_safety" 
+                        />
+                        <CompactCheck 
+                            label="Não beliscar, maximo 4 ref." 
+                            checked={tasks.noSnack} 
+                            onToggle={() => setTasks({...tasks, noSnack: !tasks.noSnack})} 
+                            icon="block" 
+                        />
+                        <CompactCheck 
+                            label="Jantar até as 19:30hs" 
+                            checked={tasks.earlyDinner} 
+                            onToggle={() => setTasks({...tasks, earlyDinner: !tasks.earlyDinner})} 
+                            icon="event_upcoming" 
+                        />
+                    </div>
+
+                    <NavBar />
+                </div>
+            );
+        };
+
+        const CompactCheck = ({ label, checked, onToggle, icon }) => (
+            <div onClick={onToggle} className={`flex items-center gap-3 p-4 rounded-2xl border transition-all active:scale-98 cursor-pointer ${checked ? 'bg-n1/5 border-n1/20 shadow-sm shadow-n1/5' : 'bg-dark-card border-white/5'}`}>
+                <div className={`w-8 h-8 rounded-xl flex items-center justify-center ${checked ? 'bg-n1 text-black' : 'bg-dark-surface text-gray-600'}`}>
+                    <span className="material-symbols-rounded text-xl">{icon}</span>
+                </div>
+                <span className={`flex-1 text-sm font-bold ${checked ? 'text-white' : 'text-gray-400'}`}>{label}</span>
+                <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all ${checked ? 'bg-n1 border-n1' : 'border-gray-700'}`}>
+                    {checked && <span className="material-symbols-rounded text-black text-[14px] font-black">check</span>}
+                </div>
+            </div>
+        );
+
+        const Hydration = () => {
+            const { weight, setWeight } = useContext(AppContext);
+            const today = getCurrentDate();
+            const [intake, setIntake] = useStickyState(0, `n1_water_${today}`);
+            
+            const goal = (weight || 80) * 0.035;
+            const progress = Math.min((intake / goal) * 100, 100);
+
+            return (
+                <div className="pt-20 pb-28 px-6 animate-slide-up">
+                    <Header title="Hidratação" showBack />
+                    
+                    <div className="glass p-6 rounded-[2.5rem] mb-8">
+                        <label className="block text-[10px] font-black text-n1 uppercase tracking-widest mb-4">Ajustar Meu Peso</label>
+                        <div className="flex items-center gap-4">
+                            <div className="relative flex-1">
+                                <input 
+                                    type="number" 
+                                    value={weight} 
+                                    onChange={(e) => setWeight(Number(e.target.value))}
+                                    className="w-full bg-dark-surface border-none rounded-2xl py-4 px-6 text-2xl font-black focus:ring-2 focus:ring-n1 transition-all"
+                                />
+                                <span className="absolute right-6 top-1/2 -translate-y-1/2 text-gray-500 font-bold">KG</span>
+                            </div>
+                            <div className="bg-n1/10 p-4 rounded-2xl border border-n1/20 text-center min-w-[100px]">
+                                <span className="block text-[8px] font-black text-n1 uppercase">Meta Diária</span>
+                                <span className="text-lg font-black">{goal.toFixed(1)}L</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col items-center">
+                        <div className="relative w-40 h-64 bg-dark-surface rounded-[2rem] border-4 border-white/5 overflow-hidden shadow-2xl mb-10">
+                            <div className="absolute bottom-0 left-0 right-0 water-fill" style={{height: `${progress}%`}}>
+                                <div className="absolute top-0 left-0 right-0 h-4 bg-white/20 blur-sm"></div>
+                            </div>
+                            <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
+                                <span className="text-3xl font-black text-white">{Math.round(progress)}%</span>
+                                <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest">Batido</span>
+                            </div>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4 w-full">
+                            <button onClick={() => setIntake(prev => prev + 0.25)} className="bg-dark-card border border-white/5 p-5 rounded-3xl flex flex-col items-center gap-2 active:scale-90 transition-transform shadow-lg">
+                                <span className="material-symbols-rounded text-blue-400 text-3xl">local_drink</span>
+                                <span className="font-black text-sm">+250ml</span>
+                            </button>
+                            <button onClick={() => setIntake(prev => prev + 0.50)} className="bg-dark-card border border-white/5 p-5 rounded-3xl flex flex-col items-center gap-2 active:scale-90 transition-transform shadow-lg">
+                                <span className="material-symbols-rounded text-blue-400 text-3xl">water_bottle</span>
+                                <span className="font-black text-sm">+500ml</span>
                             </button>
                         </div>
-                        ${showFullNote ? `
-                            <div class="mt-2 text-sm font-medium opacity-90 uppercase">
-                                <span class="mr-2">${cfg.label}:</span> ${food.note}
-                            </div>
-                        ` : ''}
+                        
+                        <button 
+                            onClick={() => setIntake(0)}
+                            className="mt-8 text-[10px] font-bold text-gray-600 uppercase tracking-widest hover:text-red-400 transition-colors"
+                        >
+                            Resetar Contador de Hoje
+                        </button>
                     </div>
-                `;
-        },
+                    <NavBar />
+                </div>
+            );
+        };
 
-        renderEmptySearch: () => {
-          UI.resultsArea.innerHTML = `
-                    <div class="p-6 bg-slate-100 rounded-xl border border-dashed border-slate-300">
-                        <i data-lucide="help-circle" class="h-10 w-10 text-slate-400 mx-auto mb-2"></i>
-                        <p class="text-slate-600 font-medium">Alimento não encontrado.</p>
-                        <p class="text-indigo-600 font-bold text-sm mt-1 uppercase italic">Pergunte no grupo antes de consumi-lo!</p>
-                    </div>
-                `;
-          lucide.createIcons();
-        },
-
-        toggleRules: () => {
-          const content = document.getElementById('rulesContent');
-          const chevron = document.getElementById('rulesChevron');
-          const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
-
-          content.style.maxHeight = isOpen ? '0px' : `${content.scrollHeight}px`;
-          chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
-        }
-      };
-
-      /**
-       * CORE APPLICATION MODULE
-       */
-      const App = {
-        state: {
-          favorites: Utils.storage.get('farol_favs'),
-          history: Utils.storage.get('farol_hist')
-        },
-
-        init: () => {
-          App.renderInitialUI();
-          document.getElementById('searchInput').addEventListener('input', (e) => App.onSearch(e.target.value));
-          lucide.createIcons();
-        },
-
-        renderInitialUI: () => {
-          // Render Interactive Legend Buttons
-          UI.legendList.innerHTML = Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => `
-                    <button onclick="App.filterByCategory('${key}')" 
-                            class="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-transparent hover:border-slate-200 bg-slate-50 transition-all text-left filter-btn">
-                        <div class="h-6 w-6 rounded-full ${cfg.dot} shrink-0 flex items-center justify-center text-white">
-                             <i data-lucide="${cfg.icon}" class="h-4 w-4"></i>
+        const Method = () => (
+            <div className="pt-20 pb-28 px-4 animate-slide-up">
+                <Header title="O Método" showBack />
+                <div className="space-y-6">
+                    <div className="glass p-2 rounded-[2rem] overflow-hidden shadow-2xl border-n1/10">
+                        <div className="relative pt-[56.25%] w-full rounded-[1.5rem] overflow-hidden">
+                            <iframe 
+                                className="absolute top-0 left-0 w-full h-full"
+                                src="https://www.youtube.com/embed/tbvjWN2kbMA?si=UEM8bq3DRXL3m1U8" 
+                                title="Ativador Metabolismo N1" 
+                                frameBorder="0" 
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+                                allowFullScreen
+                            ></iframe>
                         </div>
-                        <div class="flex-1">
-                            <span class="font-bold text-sm ${cfg.text}">${cfg.label}:</span>
-                            <span class="text-xs text-slate-500 block">${cfg.desc}</span>
-                        </div>
-                        <i data-lucide="chevron-right" class="h-4 w-4 text-slate-300"></i>
-                    </button>
-                `).join('');
-
-          // Render Rules
-          UI.rulesList.innerHTML = GOLDEN_RULES.map(r => `
-                    <div class="flex gap-4 items-start border-b border-indigo-400/20 pb-3 last:border-0 text-left">
-                        <div class="p-2 bg-white/10 rounded-lg"><i data-lucide="${r.icon}" class="h-5 w-5 text-white"></i></div>
-                        <div>
-                            <h4 class="font-bold text-white leading-tight">${r.title}</h4>
-                            <p class="text-xs text-indigo-100 opacity-80 leading-relaxed">${r.desc}</p>
+                        <div className="p-5">
+                            <h2 className="text-lg font-black text-white">Guia Ativador Nível 1</h2>
+                            <p className="text-xs text-gray-400 mt-2 leading-relaxed">Aprenda a lógica por trás da queima de gordura e reprogramação hormonal.</p>
                         </div>
                     </div>
-                `).join('');
 
-          App.refreshSavedLists();
-        },
-
-        onSearch: (term) => {
-          if (!term.trim()) {
-            UI.resultsArea.innerHTML = '';
-            return;
-          }
-          const normalizedTerm = Utils.normalize(term);
-          const filtered = FOOD_DATABASE.filter(f =>
-            Utils.normalize(f.name).includes(normalizedTerm) ||
-            (f.tags && f.tags.some(t => Utils.normalize(t).includes(normalizedTerm)))
-          ).slice(0, 30);
-
-          if (filtered.length === 0) {
-            UI.renderEmptySearch();
-          } else {
-            UI.resultsArea.innerHTML = filtered.map(food => {
-              const isFav = App.state.favorites.some(fav => fav.name === food.name);
-              return UI.createFoodCard(food, isFav);
-            }).join('');
-            lucide.createIcons();
-          }
-        },
-
-        filterByCategory: (category) => {
-          const filtered = FOOD_DATABASE.filter(f => f.category === category);
-          const cfg = CATEGORY_CONFIG[category];
-
-          document.getElementById('searchInput').value = '';
-
-          UI.resultsArea.innerHTML = `
-                    <div class="flex items-center justify-between mb-4 px-2">
-                         <div class="flex items-center gap-2">
-                             <div class="h-3 w-3 rounded-full ${cfg.dot}"></div>
-                             <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500">${cfg.label}</h4>
-                         </div>
-                         <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">${filtered.length} Itens</span>
+                    <div className="glass p-6 rounded-[2.5rem] space-y-4">
+                        <h3 className="text-n1 font-black text-sm uppercase tracking-widest mb-2">Fundamentos N1</h3>
+                        <MethodStep num="1" title="Sono" text="Durma antes das 23h. É onde a mágica acontece." />
+                        <MethodStep num="2" title="Hidratação" text="35ml por kg. Água é o combustível da queima." />
+                        <MethodStep num="3" title="Treino" text="Higiene diária. Força + Cardio." />
+                        <MethodStep num="4" title="Alimentação" text="Alimentação natural desinflamatoria." />
                     </div>
-                    <div class="space-y-3">
-                        ${filtered.map(food => {
-                            const isFav = App.state.favorites.some(fav => fav.name === food.name);
-                            return UI.createFoodCard(food, isFav);
-                        }).join('')}
-                    </div>
-                `;
-          lucide.createIcons();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        },
+                </div>
+                <NavBar />
+            </div>
+        );
 
-        clearSearch: () => {
-          document.getElementById('searchInput').value = '';
-          UI.resultsArea.innerHTML = '';
-        },
+        const MethodStep = ({ num, title, text }) => (
+            <div className="flex gap-4 p-4 rounded-2xl bg-dark-surface/30 border border-white/5">
+                <span className="w-8 h-8 rounded-full bg-n1 text-black flex items-center justify-center font-black text-xs shrink-0">{num}</span>
+                <div>
+                    <h4 className="font-bold text-sm text-white">{title}</h4>
+                    <p className="text-[11px] text-gray-500 mt-1 leading-tight">{text}</p>
+                </div>
+            </div>
+        );
 
-        toggleFavorite: (name) => {
-          const food = FOOD_DATABASE.find(f => f.name === name);
-          const index = App.state.favorites.findIndex(f => f.name === name);
+        const App = () => {
+            const [weight, setWeight] = useStickyState(80, 'n1_user_weight_v2');
 
-          // ✅ FIX AQUI: era App.state.stateFavorites(...) (não existe) e por isso quebrava tudo
-          if (index > -1) App.stateFavorites(App.state.favorites.filter((_, i) => i !== index));
-          else App.stateFavorites([...App.state.favorites, food]);
+            return (
+                <AppContext.Provider value={{ weight, setWeight }}>
+                    <HashRouter>
+                        <Routes>
+                            <Route path="/" element={<Dashboard />} />
+                            <Route path="/hydration" element={<Hydration />} />
+                            <Route path="/method" element={<Method />} />
+                        </Routes>
+                    </HashRouter>
+                </AppContext.Provider>
+            );
+        };
 
-          const inputVal = document.getElementById('searchInput').value;
-          if (inputVal) App.onSearch(inputVal);
-          else {
-            const lastResult = UI.resultsArea.querySelector('h4');
-            if (lastResult) {
-              const catLabel = lastResult.innerText;
-              const catKey = Object.keys(CATEGORY_CONFIG).find(k => CATEGORY_CONFIG[k].label.toUpperCase() === catLabel);
-              if (catKey) App.filterByCategory(catKey);
-            }
-          }
-        },
-
-        stateFavorites: (newList) => {
-          App.state.favorites = newList;
-          Utils.storage.set('farol_favs', newList);
-          App.refreshSavedLists();
-        },
-
-        clearFavorites: () => {
-          App.stateFavorites([]);
-          App.clearSearch();
-        },
-
-        addToHistory: (name) => {
-          const food = FOOD_DATABASE.find(f => f.name === name);
-          if (!food) return;
-          const newHistory = [food, ...App.state.history.filter(h => h.name !== name)].slice(0, 5);
-          App.state.history = newHistory;
-          Utils.storage.set('farol_hist', newHistory);
-          App.refreshSavedLists();
-        },
-
-        refreshSavedLists: () => {
-          const { favorites, history } = App.state;
-
-          document.getElementById('favoritesSection').classList.toggle('hidden', favorites.length === 0);
-          UI.favoritesList.innerHTML = favorites.map(f => {
-            const cfg = CATEGORY_CONFIG[f.category];
-            return `
-                        <div onclick="App.filterByCategory('${f.category}')" 
-                             class="p-3 rounded-xl border ${cfg.bg} shadow-sm text-sm font-bold flex items-center justify-between food-card-transition cursor-pointer">
-                            <span class="truncate pr-2 text-xs">${f.name}</span>
-                            <i data-lucide="check" class="h-3 w-3 opacity-40"></i>
-                        </div>
-                    `;
-          }).join('');
-
-          document.getElementById('historySection').classList.toggle('hidden', history.length === 0);
-          UI.historyList.innerHTML = history.map(h => {
-            const cfg = CATEGORY_CONFIG[h.category];
-            return `
-                        <div onclick="document.getElementById('searchInput').value='${h.name}'; App.onSearch('${h.name}')"
-                             class="p-3 flex items-center gap-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 food-card-transition cursor-pointer text-left">
-                            <div class="h-3 w-3 rounded-full ${cfg.dot} shrink-0"></div>
-                            <span class="text-slate-700 font-medium text-sm">${h.name}</span>
-                        </div>
-                    `;
-          }).join('');
-
-          lucide.createIcons();
-        }
-      };
-
-      // Start App
-      App.init();
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
-  </body>
-
+</body>
 </html>
