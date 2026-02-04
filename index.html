@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farol dos Alimentos - Ativador Metabólico N1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .hide-scroll::-webkit-scrollbar {
+        display: none;
+      }
+
+      #rulesContent {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+      }
+
+      #rulesChevron {
+        transition: transform 0.3s ease;
+      }
+
+      .food-card-transition {
+        transition: all 0.2s ease;
+      }
+
+      .food-card-transition:active {
+        transform: scale(0.97);
+      }
+
+      .filter-btn:active {
+        transform: scale(0.95);
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-50 text-slate-900 pb-12">
+
+    <!-- HEADER COMPONENT -->
+    <header class="w-full bg-white shadow-sm border-b border-slate-100 py-6 px-4 mb-6 flex flex-col items-center">
+      <img src="https://i.ibb.co/60C7N827/logo.png" alt="Logo Ativador Metabólico" class="h-16 w-auto mb-4 object-contain" onerror="this.style.display='none'">
+      <h1 class="text-xl font-bold text-slate-800 tracking-tight text-center">Ativador Metabólico N1</h1>
+      <p class="text-sm text-slate-500">Guia de Bolso: Farol dos Alimentos</p>
+    </header>
+
+    <main class="max-w-md mx-auto px-4 space-y-6">
+
+      <!-- SEARCH SECTION -->
+      <section class="bg-white rounded-2xl shadow-md p-5 border border-slate-100">
+        <div class="relative group">
+          <i data-lucide="search" class="absolute left-3 top-3.5 h-5 w-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors"></i>
+          <input type="text" id="searchInput" placeholder="Ex: Fruta, Peixe, Arroz..." class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition-all">
+        </div>
+        <div id="resultsArea" class="mt-4 space-y-3 text-center"></div>
+      </section>
+
+      <!-- EXPLORE BY LISTS (INTERACTIVE LEGEND) -->
+      <section class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
+        <div class="flex items-center justify-between">
+          <h3 class="font-bold text-sm uppercase tracking-widest text-slate-500 flex items-center gap-2">
+            <i data-lucide="layers" class="h-4 w-4"></i> Explorar Listas:
+          </h3>
+          <button onclick="App.clearSearch()" class="text-[10px] font-bold text-slate-400 hover:text-indigo-600 uppercase flex items-center gap-1 transition-colors">
+            <i data-lucide="refresh-cw" class="h-3 w-3"></i>
+            Limpar Tudo
+          </button>
+        </div>
+        <div id="legendList" class="space-y-2"></div>
+      </section>
+
+      <!-- USER DATA SECTION (SHOPPING LIST & HISTORY) -->
+      <div id="savedDataArea" class="space-y-6">
+        <section id="favoritesSection" class="hidden">
+          <div class="flex items-center justify-between mb-3 px-1">
+            <div class="flex items-center gap-2 text-slate-500 font-bold text-sm uppercase tracking-widest">
+              <i data-lucide="shopping-cart" class="h-4 w-4"></i>
+              Lista de Compras
+            </div>
+            <button onclick="App.clearFavorites()" class="text-[10px] font-bold text-red-500 hover:text-red-700 uppercase flex items-center gap-1 transition-colors">
+              <i data-lucide="trash-2" class="h-3 w-3"></i>
+              Limpar Lista
+            </button>
+          </div>
+          <div id="favoritesList" class="grid grid-cols-2 gap-3"></div>
+        </section>
+
+        <section id="historySection" class="hidden">
+          <div class="flex items-center gap-2 mb-3 px-1 text-slate-500 font-bold text-sm uppercase tracking-widest">
+            <i data-lucide="history" class="h-4 w-4"></i>
+            Últimas Consultas
+          </div>
+          <div id="historyList" class="bg-white rounded-2xl border border-slate-200 overflow-hidden"></div>
+        </section>
+      </div>
+
+      <!-- LEARNING AREA -->
+      <section class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4 shadow-sm">
+        <h3 class="font-bold text-sm uppercase tracking-widest text-slate-500 flex items-center gap-2">
+          <i data-lucide="play-circle" class="h-4 w-4"></i> Área de Aprendizado:
+        </h3>
+        <div class="aspect-video w-full rounded-xl overflow-hidden shadow-inner bg-slate-100">
+          <iframe class="w-full h-full" src="https://www.youtube.com/embed/tbvjWN2kbMA?si=UEM8bq3DRXL3m1U8&rel=0&modestbranding=1" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen>
+          </iframe>
+        </div>
+        <p class="text-xs text-slate-500 leading-relaxed">
+          Assista ao vídeo acima para entender em detalhes como o método <strong>Ativador Metabólico</strong> funciona.
+        </p>
+      </section>
+
+      <!-- GOLDEN RULES (FOOTER) -->
+      <section class="bg-indigo-600 rounded-2xl shadow-lg text-white overflow-hidden">
+        <button onclick="UI.toggleRules()" class="w-full flex justify-between items-center p-5 font-bold text-lg hover:bg-indigo-700 transition-colors focus:outline-none">
+          <div class="flex items-center gap-2">
+            <i data-lucide="star" class="h-6 w-6 text-yellow-400 fill-yellow-400"></i>
+            Regras de Ouro (N1)
+          </div>
+          <i data-lucide="chevron-down" id="rulesChevron"></i>
+        </button>
+        <div id="rulesContent" class="bg-indigo-500/10">
+          <div class="p-4 space-y-4" id="rulesList"></div>
+        </div>
+      </section>
+
+      <footer class="text-center py-4">
+        <p class="text-slate-400 text-xs leading-relaxed px-8 italic">
+          "O papo aqui não é emagrecimento, o papo aqui é saúde. O emagrecimento é consequência."
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      /**
+       * CONFIGURATION & DATA
+       */
+      const CATEGORY_CONFIG = {
+        verde: {
+          bg: 'bg-emerald-100 text-emerald-800 border-emerald-200',
+          dot: 'bg-emerald-500',
+          text: 'text-emerald-700',
+          icon: 'check-circle',
+          label: 'Lista Verde',
+          desc: 'Coma à vontade.'
+        },
+        amarela: {
+          bg: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+          dot: 'bg-yellow-500',
+          text: 'text-yellow-700',
+          icon: 'info',
+          label: 'Lista Amarela',
+          desc: 'Moderação (Máx 2/dia).'
+        },
+        laranja: {
+          bg: 'bg-orange-100 text-orange-800 border-orange-200',
+          dot: 'bg-orange-500',
+          text: 'text-orange-700',
+          icon: 'alert-triangle',
+          label: 'Lista Laranja',
+          desc: 'Em crise (1x a cada 2 dias).'
+        },
+        vermelha: {
+          bg: 'bg-red-100 text-red-800 border-red-200',
+          dot: 'bg-red-500',
+          text: 'text-red-700',
+          icon: 'x-circle',
+          label: 'Lista Vermelha',
+          desc: 'Pare! Atrapalha a queima.'
+        }
+      };
+
+      const FOOD_DATABASE = [
+        // LISTA VERDE
+        { name: 'Abacaxi', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Cereja', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Goiaba', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Kiwi', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Laranja', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Limão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Maçã', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Mamão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Maracujá', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Melancia', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Melão', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Mexerica', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Morango', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Pera', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Pêssego', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Mirtilo', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Jabuticaba', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Acerola', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Figo', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+        { name: 'Romã', category: 'verde', note: 'Liberado', tags: ['fruta'] },
+
+        { name: 'Ovo caipira ou orgânico', category: 'verde', note: 'Excelente fonte', tags: ['proteina', 'ovo'] },
+        { name: 'Ovo de Codorna', category: 'verde', note: 'Liberado', tags: ['proteina', 'ovo'] },
+
+        { name: 'Filé de Peixe', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Filé de Frango', category: 'verde', note: 'Liberado', tags: ['proteina', 'frango'] },
+        { name: 'Sardinha', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Tilapia', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Pescada', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Cação', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Tainha', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Linguado', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Salmão', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Badejo', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Abadejo', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+        { name: 'Merluza', category: 'verde', note: 'Liberado', tags: ['proteina', 'peixe'] },
+
+        { name: 'Aveia em Flocos', category: 'verde', note: 'Liberado', tags: ['carboidrato', 'grao'] },
+
+        { name: 'Folhas TODAS', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha', 'salada'] },
+        { name: 'Alface crespa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Alface americana', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Alface roxa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Alface mimosa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Alface romana', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Rúcula', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Agrião', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Espinafre', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Escarola', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Chicória', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Almeirão', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Ora-pro-nóbis', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Couve manteiga', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Couve roxa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+        { name: 'Couve-flor', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Repolho verde', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Repolho roxo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Acelga', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+
+        { name: 'Abóbora Japonesa', category: 'verde', note: 'Liberado', tags: ['vegetal', 'carboidrato'] },
+        { name: 'Abobrinha', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Beringela', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Brócolis', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Cenoura', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Chuchu', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Jiló', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Lentilha', category: 'verde', note: 'Liberado', tags: ['leguminosa'] },
+        { name: 'Mandioquinha', category: 'verde', note: 'Liberado', tags: ['carboidrato'] },
+        { name: 'Pepino', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Pimentão', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Quiabo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Quinoa', category: 'verde', note: 'Liberado', tags: ['grao'] },
+        { name: 'Rabanete', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Cebola', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Tomate', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+
+        { name: 'Alho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Gengibre', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Cúrcuma', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Açafrão', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Cominho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Canela', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+
+        { name: 'Cacau 100%', category: 'verde', note: 'Liberado', tags: ['bebida'] },
+        { name: 'Água', category: 'verde', note: 'Indispensável', tags: ['bebida'] },
+        { name: 'Água com gas', category: 'verde', note: 'Liberado', tags: ['bebida'] },
+        { name: 'Café (até as 12hs)', category: 'verde', note: 'Atenção ao horário', tags: ['bebida', 'cafe'] },
+        { name: 'Chá', category: 'verde', note: 'Liberado', tags: ['bebida', 'cha'] },
+
+        { name: 'Temperos Secos', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Temperos naturais', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+
+        { name: 'Pimenta', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Páprica', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Pimenta do reino', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Semente de mostarda', category: 'verde', note: 'Liberado', tags: ['tempero', 'semente'] },
+        { name: 'Lemon pepper', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+
+        { name: 'Orégano', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Manjericão', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Hortelã', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Salsinha', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Cebolinha', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Coentro', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+
+        { name: 'Sementes (Linhaça, Chia...)', category: 'verde', note: 'Liberado', tags: ['grao', 'semente'] },
+        { name: 'Vagem', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Aipo', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Salsão', category: 'verde', note: 'Liberado', tags: ['vegetal'] },
+        { name: 'Catalonha', category: 'verde', note: 'Liberado', tags: ['vegetal', 'folha'] },
+
+        { name: 'Semente de abóbora', category: 'verde', note: 'Liberado', tags: ['semente'] },
+        { name: 'Semente de girassol', category: 'verde', note: 'Liberado', tags: ['semente'] },
+        { name: 'Alpiste', category: 'verde', note: 'Liberado', tags: ['semente'] },
+        { name: 'Gergelim', category: 'verde', note: 'Liberado', tags: ['semente'] },
+        { name: 'Psyllium', category: 'verde', note: 'Liberado', tags: ['semente', 'fibra'] },
+
+        { name: 'Colorau', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Alecrin', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Curry', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Cravo da India', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Manjerona', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Louro', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Mix de Pimentas', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Mostarda em pó', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Noz Moscada', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Pimenta Caiena', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Pimenta Calabresa', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Tomilho', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Sal Rosa', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+        { name: 'Sálvia', category: 'verde', note: 'Liberado', tags: ['tempero'] },
+
+        // LISTA AMARELA
+        { name: 'Banana', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Manga', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Tamara', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Atemoia', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Abacate', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta', 'gordura'] },
+        { name: 'Coco', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta', 'gordura'] },
+        { name: 'Batata Doce', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato'] },
+        { name: 'Grão de Bico', category: 'amarela', note: 'Máximo 2 no dia', tags: ['leguminosa'] },
+        { name: 'Feijão Azuki', category: 'amarela', note: 'Máximo 2 no dia', tags: ['leguminosa'] },
+        { name: 'Arroz Negro', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato', 'grao'] },
+        { name: 'Inhame', category: 'amarela', note: 'Máximo 2 no dia', tags: ['carboidrato'] },
+        { name: 'Nozes', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
+
+        // ADICIONADOS (AMARELA)
+        { name: 'Amêndoa Crua', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
+        { name: 'Castanhas Cruas', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
+        { name: 'Amendoim Cru', category: 'amarela', note: 'Máximo 2 no dia', tags: ['oleaginosa', 'gordura'] },
+        { name: 'Camarão', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+        { name: 'Fígado de Boi', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'carne'] },
+        { name: 'Patinho de Boi', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'carne'] },
+        { name: 'Frutos do Mar', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+
+        { name: 'Amora', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Carambola', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Graviola', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Lula', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+        { name: 'Polvo', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+        { name: 'Mexilhão', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+        { name: 'Ostra', category: 'amarela', note: 'Máximo 2 no dia', tags: ['proteina', 'frutos do mar'] },
+        { name: 'Caqui', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+        { name: 'Uva', category: 'amarela', note: 'Máximo 2 no dia', tags: ['fruta'] },
+
+        // LISTA LARANJA
+        { name: 'Pipoca na Água / Pipoqueira', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['snack'] },
+        { name: 'Chocolate 85%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
+        { name: 'Mel', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
+        { name: 'Vinagre de Maçã Orgânico', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['tempero'] },
+        { name: 'Músculo', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
+        { name: 'Alcatra', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
+        { name: 'Baby Beef', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
+        { name: 'Acém', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
+
+        // ADICIONADOS (LARANJA)
+        { name: 'Pasta de Amendoim 100%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['oleaginosa', 'gordura'] },
+        { name: 'Leite Vegetal (Castanha)', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['bebida'] },
+        { name: 'Leite de Coco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['bebida', 'gordura'] },
+        { name: 'Nibs de Cacau', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
+        { name: 'Granola Zero', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['carboidrato'] },
+        { name: 'Óleo de Coco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['gordura'] },
+        { name: 'Adoçante 100% Stevia', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['doce'] },
+        { name: 'Extrato de Baunilha', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['tempero'] },
+        { name: 'Requeijão Light', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['laticinio'] },
+        { name: 'Ricota', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['laticinio'] },
+        { name: 'Açaí Puro 100%', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['fruta'] },
+        { name: 'Lombo de Porco', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne', 'porco'] },
+        { name: 'Filé Mignon', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['proteina', 'carne'] },
+        { name: 'Azeite Extra Virgem', category: 'laranja', note: 'Máximo 1 a cada 2 dias', tags: ['gordura'] },
+
+        // LISTA VERMELHA
+        { name: 'Arroz Branco', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'grao'] },
+        { name: 'Açúcar', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Coca Zero', category: 'vermelha', note: 'Não consumir', tags: ['bebida', 'refrigerante'] },
+        { name: 'Queijos (Amarelos/Gordos)', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
+        { name: 'Iogurte', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
+        { name: 'Enlatados', category: 'vermelha', note: 'Não consumir', tags: ['processado'] },
+        { name: 'Ervilha', category: 'vermelha', note: 'Não consumir', tags: ['leguminosa'] },
+        { name: 'Farinhas (Trigo, Milho...)', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'farinha'] },
+        { name: 'Pão / Pão Integral', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'farinha'] },
+        { name: 'Torrada', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Macarrão / Lasanha', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato', 'massa'] },
+        { name: 'Peito de Peru', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
+        { name: 'Presunto', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
+        { name: 'Mussarela', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
+        { name: 'Xilitol / Adoçantes Artificiais', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Achocolatado', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'bebida'] },
+        { name: 'Whey Protein', category: 'vermelha', note: 'Não consumir', tags: ['suplemento'] },
+        { name: 'Barra de Cereal', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'carboidrato'] },
+        { name: 'Manteiga / Margarina', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
+        { name: 'Bolacha / Biscoito', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'carboidrato'] },
+        { name: 'Óleos (Soja, Girassol...)', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
+        { name: 'Atum', category: 'vermelha', note: 'Não consumir', tags: ['peixe'] },
+        { name: 'Tapioca', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Danone', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] },
+        { name: 'Salame', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
+        { name: 'Milho', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Água Tonica', category: 'vermelha', note: 'Não consumir', tags: ['bebida'] },
+        { name: 'H2O', category: 'vermelha', note: 'Não consumir', tags: ['bebida'] },
+        { name: 'Gelatina', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Paçoca Zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Trident zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'chiclete zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Biscoito de Polvilho', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Pão de Queijo', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Pão Francês', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Frutas desidratadas', category: 'vermelha', note: 'Não consumir', tags: ['doce', 'fruta'] },
+        { name: 'Atum light', category: 'vermelha', note: 'Não consumir', tags: ['peixe'] },
+        { name: 'Bolo', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Gelatina zero', category: 'vermelha', note: 'Não consumir', tags: ['doce'] },
+        { name: 'Salsicha', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
+        { name: 'Linguiça', category: 'vermelha', note: 'Não consumir', tags: ['embutido'] },
+        { name: 'Torresmo', category: 'vermelha', note: 'Não consumir', tags: ['gordura'] },
+
+        // ADICIONADOS (VERMELHA)
+        { name: 'Feijão Comum', category: 'vermelha', note: 'Não consumir', tags: ['leguminosa'] },
+        { name: 'Batata Inglesa', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Mandioca', category: 'vermelha', note: 'Não consumir', tags: ['carboidrato'] },
+        { name: 'Leite de Vaca', category: 'vermelha', note: 'Não consumir', tags: ['laticinio'] }
+      ];
+
+      const GOLDEN_RULES = [
+        { title: 'Sono Restaurador', desc: 'Dormir antes das 23h para o pico de melatonina.', icon: 'moon' },
+        { title: 'Hidratação (35ml/kg)', desc: 'Água é o combustível da queima. Xixi claro!', icon: 'droplets' },
+        { title: 'Água com Limão', desc: 'Ao acordar para preparar o organismo.', icon: 'zap' },
+        { title: 'Regra 50/25/25', desc: '50% Folhas, 25% Legumes, 25% Proteína.', icon: 'utensils' },
+        { title: 'Não Beliscar', desc: 'Faça refeições completas. Máximo 4 no dia.', icon: 'ban' },
+        { title: 'Treino = Banho', desc: 'Nunca falte. Se perdeu o dia, perdeu muito.', icon: 'dumbbell' }
+      ];
+
+      /**
+       * UTILS MODULE
+       */
+      const Utils = {
+        normalize: (str) => str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase(),
+        storage: {
+          get: (key) => JSON.parse(localStorage.getItem(key) || '[]'),
+          set: (key, val) => localStorage.setItem(key, JSON.stringify(val))
+        }
+      };
+
+      /**
+       * UI RENDER MODULE
+       */
+      const UI = {
+        resultsArea: document.getElementById('resultsArea'),
+        favoritesList: document.getElementById('favoritesList'),
+        historyList: document.getElementById('historyList'),
+        rulesList: document.getElementById('rulesList'),
+        legendList: document.getElementById('legendList'),
+
+        createFoodCard: (food, isFav, showFullNote = true) => {
+          const cfg = CATEGORY_CONFIG[food.category];
+          return `
+                    <div onclick="App.addToHistory('${food.name}')" class="text-left flex flex-col p-4 rounded-xl border ${cfg.bg} food-card-transition cursor-pointer shadow-sm">
+                        <div class="flex justify-between items-start">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="${cfg.icon}" class="h-5 w-5"></i>
+                                <span class="font-bold text-lg leading-tight">${food.name}</span>
+                            </div>
+                            <button onclick="event.stopPropagation(); App.toggleFavorite('${food.name}')">
+                                <i data-lucide="star" class="h-5 w-5 ${isFav ? 'fill-current text-yellow-500' : 'text-slate-300'}"></i>
+                            </button>
+                        </div>
+                        ${showFullNote ? `
+                            <div class="mt-2 text-sm font-medium opacity-90 uppercase">
+                                <span class="mr-2">${cfg.label}:</span> ${food.note}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+        },
+
+        renderEmptySearch: () => {
+          UI.resultsArea.innerHTML = `
+                    <div class="p-6 bg-slate-100 rounded-xl border border-dashed border-slate-300">
+                        <i data-lucide="help-circle" class="h-10 w-10 text-slate-400 mx-auto mb-2"></i>
+                        <p class="text-slate-600 font-medium">Alimento não encontrado.</p>
+                        <p class="text-indigo-600 font-bold text-sm mt-1 uppercase italic">Pergunte no grupo antes de consumi-lo!</p>
+                    </div>
+                `;
+          lucide.createIcons();
+        },
+
+        toggleRules: () => {
+          const content = document.getElementById('rulesContent');
+          const chevron = document.getElementById('rulesChevron');
+          const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
+
+          content.style.maxHeight = isOpen ? '0px' : `${content.scrollHeight}px`;
+          chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+        }
+      };
+
+      /**
+       * CORE APPLICATION MODULE
+       */
+      const App = {
+        state: {
+          favorites: Utils.storage.get('farol_favs'),
+          history: Utils.storage.get('farol_hist')
+        },
+
+        init: () => {
+          App.renderInitialUI();
+          document.getElementById('searchInput').addEventListener('input', (e) => App.onSearch(e.target.value));
+          lucide.createIcons();
+        },
+
+        renderInitialUI: () => {
+          // Render Interactive Legend Buttons
+          UI.legendList.innerHTML = Object.entries(CATEGORY_CONFIG).map(([key, cfg]) => `
+                    <button onclick="App.filterByCategory('${key}')" 
+                            class="w-full flex items-center gap-3 p-3 rounded-xl border-2 border-transparent hover:border-slate-200 bg-slate-50 transition-all text-left filter-btn">
+                        <div class="h-6 w-6 rounded-full ${cfg.dot} shrink-0 flex items-center justify-center text-white">
+                             <i data-lucide="${cfg.icon}" class="h-4 w-4"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="font-bold text-sm ${cfg.text}">${cfg.label}:</span>
+                            <span class="text-xs text-slate-500 block">${cfg.desc}</span>
+                        </div>
+                        <i data-lucide="chevron-right" class="h-4 w-4 text-slate-300"></i>
+                    </button>
+                `).join('');
+
+          // Render Rules
+          UI.rulesList.innerHTML = GOLDEN_RULES.map(r => `
+                    <div class="flex gap-4 items-start border-b border-indigo-400/20 pb-3 last:border-0 text-left">
+                        <div class="p-2 bg-white/10 rounded-lg"><i data-lucide="${r.icon}" class="h-5 w-5 text-white"></i></div>
+                        <div>
+                            <h4 class="font-bold text-white leading-tight">${r.title}</h4>
+                            <p class="text-xs text-indigo-100 opacity-80 leading-relaxed">${r.desc}</p>
+                        </div>
+                    </div>
+                `).join('');
+
+          App.refreshSavedLists();
+        },
+
+        onSearch: (term) => {
+          if (!term.trim()) {
+            UI.resultsArea.innerHTML = '';
+            return;
+          }
+          const normalizedTerm = Utils.normalize(term);
+          const filtered = FOOD_DATABASE.filter(f =>
+            Utils.normalize(f.name).includes(normalizedTerm) ||
+            (f.tags && f.tags.some(t => Utils.normalize(t).includes(normalizedTerm)))
+          ).slice(0, 30);
+
+          if (filtered.length === 0) {
+            UI.renderEmptySearch();
+          } else {
+            UI.resultsArea.innerHTML = filtered.map(food => {
+              const isFav = App.state.favorites.some(fav => fav.name === food.name);
+              return UI.createFoodCard(food, isFav);
+            }).join('');
+            lucide.createIcons();
+          }
+        },
+
+        filterByCategory: (category) => {
+          const filtered = FOOD_DATABASE.filter(f => f.category === category);
+          const cfg = CATEGORY_CONFIG[category];
+
+          document.getElementById('searchInput').value = '';
+
+          UI.resultsArea.innerHTML = `
+                    <div class="flex items-center justify-between mb-4 px-2">
+                         <div class="flex items-center gap-2">
+                             <div class="h-3 w-3 rounded-full ${cfg.dot}"></div>
+                             <h4 class="font-bold uppercase tracking-widest text-xs text-slate-500">${cfg.label}</h4>
+                         </div>
+                         <span class="text-[10px] bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full font-bold">${filtered.length} Itens</span>
+                    </div>
+                    <div class="space-y-3">
+                        ${filtered.map(food => {
+                            const isFav = App.state.favorites.some(fav => fav.name === food.name);
+                            return UI.createFoodCard(food, isFav);
+                        }).join('')}
+                    </div>
+                `;
+          lucide.createIcons();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        },
+
+        clearSearch: () => {
+          document.getElementById('searchInput').value = '';
+          UI.resultsArea.innerHTML = '';
+        },
+
+        toggleFavorite: (name) => {
+          const food = FOOD_DATABASE.find(f => f.name === name);
+          const index = App.state.favorites.findIndex(f => f.name === name);
+
+          // ✅ FIX AQUI: era App.state.stateFavorites(...) (não existe) e por isso quebrava tudo
+          if (index > -1) App.stateFavorites(App.state.favorites.filter((_, i) => i !== index));
+          else App.stateFavorites([...App.state.favorites, food]);
+
+          const inputVal = document.getElementById('searchInput').value;
+          if (inputVal) App.onSearch(inputVal);
+          else {
+            const lastResult = UI.resultsArea.querySelector('h4');
+            if (lastResult) {
+              const catLabel = lastResult.innerText;
+              const catKey = Object.keys(CATEGORY_CONFIG).find(k => CATEGORY_CONFIG[k].label.toUpperCase() === catLabel);
+              if (catKey) App.filterByCategory(catKey);
+            }
+          }
+        },
+
+        stateFavorites: (newList) => {
+          App.state.favorites = newList;
+          Utils.storage.set('farol_favs', newList);
+          App.refreshSavedLists();
+        },
+
+        clearFavorites: () => {
+          App.stateFavorites([]);
+          App.clearSearch();
+        },
+
+        addToHistory: (name) => {
+          const food = FOOD_DATABASE.find(f => f.name === name);
+          if (!food) return;
+          const newHistory = [food, ...App.state.history.filter(h => h.name !== name)].slice(0, 5);
+          App.state.history = newHistory;
+          Utils.storage.set('farol_hist', newHistory);
+          App.refreshSavedLists();
+        },
+
+        refreshSavedLists: () => {
+          const { favorites, history } = App.state;
+
+          document.getElementById('favoritesSection').classList.toggle('hidden', favorites.length === 0);
+          UI.favoritesList.innerHTML = favorites.map(f => {
+            const cfg = CATEGORY_CONFIG[f.category];
+            return `
+                        <div onclick="App.filterByCategory('${f.category}')" 
+                             class="p-3 rounded-xl border ${cfg.bg} shadow-sm text-sm font-bold flex items-center justify-between food-card-transition cursor-pointer">
+                            <span class="truncate pr-2 text-xs">${f.name}</span>
+                            <i data-lucide="check" class="h-3 w-3 opacity-40"></i>
+                        </div>
+                    `;
+          }).join('');
+
+          document.getElementById('historySection').classList.toggle('hidden', history.length === 0);
+          UI.historyList.innerHTML = history.map(h => {
+            const cfg = CATEGORY_CONFIG[h.category];
+            return `
+                        <div onclick="document.getElementById('searchInput').value='${h.name}'; App.onSearch('${h.name}')"
+                             class="p-3 flex items-center gap-3 border-b border-slate-100 last:border-0 hover:bg-slate-50 food-card-transition cursor-pointer text-left">
+                            <div class="h-3 w-3 rounded-full ${cfg.dot} shrink-0"></div>
+                            <span class="text-slate-700 font-medium text-sm">${h.name}</span>
+                        </div>
+                    `;
+          }).join('');
+
+          lucide.createIcons();
+        }
+      };
+
+      // Start App
+      App.init();
+    </script>
+  </body>
+
+</html>
